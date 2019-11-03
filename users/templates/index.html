@@ -13,7 +13,7 @@
     {% load static %}
     <link href="{% static "users/style.css" %}" rel="stylesheet">
 
-    <title>Vendor Work Handler</title>
+    <title>In Progress Leads</title>
 
 </head>
 <body>
@@ -25,9 +25,8 @@
             {% endif %}
         </a>
         <a style="float: right;" href="{% url 'logout' %}">Logout</a>
-        <a style="float: right;" href="{% url 'closed' %}">Closed</a>
-        <a style="float: right;" href="{% url 'converted' %}">Converted</a>
-        <a class="active" style="float: right;" href="{% url 'home' %}">Ongoing</a>
+        <a style="float: right;" href="{% url 'converted' %}">Closed</a>
+        <a class="active" style="float: right;" href="{% url 'home' %}">In Progress</a>
     </div>
     <div class="filters">
         <a href="{% url 'lead_create' %}"><button class="button green">&#43; Add a new Lead</button></a>

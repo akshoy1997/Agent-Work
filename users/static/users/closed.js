@@ -28,7 +28,7 @@ request.onload = function () {
         p2.textContent = `Address: ${item.address}`;
 
         const p3 = document.createElement('p');
-        p3.textContent = `Status: ${item.status}`;
+        p3.textContent = `Status: LOST`;
 
         container.appendChild(card);
         card.appendChild(h1);
