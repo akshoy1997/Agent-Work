@@ -6,7 +6,7 @@ container.setAttribute('class', 'container');
 app.appendChild(container);
 
 var request = new XMLHttpRequest();
-request.open('GET', 'http://127.0.0.1:8000/api/leads/', true);
+request.open('GET', "http://vendor-django-app.herokuapp.com/api/leads/", true);
 request.onload = function () {
 
   // Begin accessing JSON data here

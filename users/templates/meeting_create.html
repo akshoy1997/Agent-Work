@@ -75,7 +75,7 @@
             return cookieValue;
         }
         function check(event) {
-            const url = "http://127.0.0.1:8000/api/meetings/";
+            const url = "http://vendor-django-app.herokuapp.com/api/meetings/";
             var count = 0;
             var alert_flag = 0;
             const data = {
@@ -131,7 +131,7 @@
                     }
                 }).then(function(data) {
                     document.getElementById("message").innerHTML = data.encoded;
-                    window.location = "http://127.0.0.1:8000/home/meetings";
+                    window.location = "http://vendor-django-app.herokuapp.com/home/meetings/";
                 }).catch(function(error) {
                     document.getElementById("message").innerHTML = error.message;
                     alert(error);
