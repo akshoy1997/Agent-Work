@@ -10,7 +10,7 @@ function storeID(value){
 }
 
 var request = new XMLHttpRequest();
-request.open('GET', "http://vendor-django-app.herokuapp.com/api/leads/", true);
+request.open('GET', "https://vendor-django-app.herokuapp.com/api/leads/", true);
 request.onload = function () {
 
   // Begin accessing JSON data here
