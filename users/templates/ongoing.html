@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Custom CSS -->
+    {% load static %}
+    <link href="{% static "users/style.css" %}" rel="stylesheet">
+
+    <title>Ongoing Leads</title>
+
+</head>
+<body>
+    {% block content %}
+    <div class="topnav">
+        <a href="#">
+            {% if request.user.is_authenticated %}
+                Welcome '{{ request.user.username }}', Manage your Work Here!
+            {% endif %}
+        </a>
+        <a style="float: right;" href="{% url 'logout' %}">Logout</a>
+    </div>
+    <div class="filters">
+        <div style="float:right" class="dropdown">
+            <button class="dropbtn">Filters</button>
+            <div class="dropdown-content">
+                <a href="{% url 'home' %}">All</a>
+                <a class="active" href="#">Ongoing</a>
+                <a href="{% url 'converted' %}">Converted</a>
+                <a href="{% url 'closed' %}">Closed</a>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="main">
+        <div id="root"></div>
+    </div>
+    {% endblock %}
+    {% load static %}
+    <script src="{% static "users/ongoing.js" %}"></script>
+</body>
+</html>

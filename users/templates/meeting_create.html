@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Custom CSS -->
+    {% load static %}
+    <link href="{% static 'users/style.css' %}" rel="stylesheet">
+
+    <title>Create a New Meeting</title>
+
+</head>
+<body>
+    {% block content %}
+    <div class="topnav">
+        <a href="#">
+            {% if request.user.is_authenticated %}
+                Welcome '{{ request.user.username }}', Manage your Work Here!
+            {% endif %}
+        </a>
+        <a style="float: right;" href="{% url 'logout' %}">Logout</a>
+        <a style="float: right;" href="{% url 'closed' %}">Closed</a>
+        <a style="float: right;" href="{% url 'converted' %}">Converted</a>
+        <a style="float: right;" href="{% url 'home' %}">Ongoing</a>
+    </div>
+    <div class="card form login">
+        <form>
+            {% csrf_token %}
+            <h1 class="title border-bottom mb-4">Create a new Meeting</h1>
+            <label for="type">Type Of Meeting</label>
+            <select id="type" name="type">
+                <option value="INTRODUCTORY MEETING">Introductory Meeting</option>
+                <option value="FOLLOW-UP MEETING">Follow-Up Meeting</option>
+            </select>
+            <span class="alerts" id="type-alert" style="display: none;">*Type can't be Empty</span>
+        
+            <label for="date">Date</label>
+            <input type="date" id="date" name="date">
+            <span class="alerts" id="date-alert" style="display: none;">*Date can't be Empty</span>
+
+            <label for="time">Time</label>
+            <input type="time" id="time" name="date">
+            <span class="alerts" id="time-alert" style="display: none;">Time can't be Empty</span>
+
+            <label for="address">Venue</label>
+            <input type="text" id="venue" name="venue" placeholder="Venue">
+            <span class="alerts" id="venue-alert" style="display: none;">*Venue can't be Empty</span>
+            
+            <input onClick="check()" class="submit" value="Submit" readonly>
+        </form>
+        <div style="display:none;" id="message"></div>   
+    </div>
+    {% endblock %}
+    {% load static %}
+    <script>
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        function check(event) {
+            const url = "http://127.0.0.1:8000/api/meetings/";
+            var count = 0;
+            var alert_flag = 0;
+            const data = {
+                "lead": parseInt(localStorage["lead_id"]),
+                "type" : document.getElementById('type').value,
+                "date" : document.getElementById('date').value,
+                "time" : document.getElementById('time').value,
+                'venue' : document.getElementById('venue').value,
+                };
+            if(document.getElementById('type').value == ""){
+                document.getElementById('type-alert').style.display = 'block';
+            }
+            else{
+                document.getElementById('type-alert').style.display = 'none';
+                count+=1;
+            }
+            if(document.getElementById('date').value == ""){
+                document.getElementById('date-alert').style.display = 'block';
+            }
+            else{
+                document.getElementById('date-alert').style.display = 'none';
+                count+=1;
+            }
+            if(document.getElementById('time').value == ""){
+                document.getElementById('time-alert').style.display = 'block';
+            }
+            else{
+                document.getElementById('time-alert').style.display = 'none';
+                count+=1;
+            }
+            if(document.getElementById('venue').value == ""){
+                document.getElementById('venue-alert').style.display = 'block';
+            }
+            else{
+                document.getElementById('venue-alert').style.display = 'none';
+                count+=1;
+            }
+            if(count==4){
+                fetch(url, {
+                    method: "POST",
+                    credentials: "same-origin",
+                    headers: {
+                        "X-CSRFToken" : getCookie('csrftoken'),
+                        "Accept": "application/json",
+                        "Content-Type": "application/json; charset=UTF-8"
+                    },
+                    body: JSON.stringify(data)
+                }).then(function(response) {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error("Could not reach the API: " + response.statusText);
+                    }
+                }).then(function(data) {
+                    document.getElementById("message").innerHTML = data.encoded;
+                    window.location = "http://127.0.0.1:8000/home/meetings";
+                }).catch(function(error) {
+                    document.getElementById("message").innerHTML = error.message;
+                    alert(error);
+                });
+            }
+        }
+    </script>
+</body>
+</html>

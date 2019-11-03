@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Custom CSS -->
+    {% load static %}
+    <link href="{% static 'users/style.css' %}" rel="stylesheet">
+
+    <title>Create a New Lead</title>
+
+</head>
+<body>
+    {% block content %}
+    <div class="topnav">
+        <a href="#">
+            {% if request.user.is_authenticated %}
+                Welcome '{{ request.user.username }}', Manage your Work Here!
+            {% endif %}
+        </a>
+        <a style="float: right;" href="{% url 'logout' %}">Logout</a>
+        <a style="float: right;" href="{% url 'closed' %}">Closed</a>
+        <a style="float: right;" href="{% url 'converted' %}">Converted</a>
+        <a style="float: right;" href="{% url 'home' %}">Ongoing</a>
+    </div>
+    <div class="card form login">
+        <form>
+            {% csrf_token %}
+            <h1 class="title border-bottom mb-4">Create a new Lead</h1>
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Name of Lead">
+            <span class="alerts" id="name-alert" style="display: none;">*Lead Name can't be Empty</span>
+        
+            <label for="phone_number">Phone Number</label>
+            <input type="number" id="phone_number" name="phone_number" placeholder="Phone Number">
+            <span class="alerts" id="phone-alert" style="display: none;">*Phone Number can't be Empty</span>
+        
+            <label for="address">Address</label>
+            <input type="text" id="address" name="address" placeholder="Address">
+            <span class="alerts" id="address-alert" style="display: none;">*Address can't be Empty</span>
+            
+            <input onClick="check()" class="submit" value="Submit" readonly>
+        </form>
+        <div style="display: none;" id="message">{{ request.user.id }}</div>   
+    </div>
+    {% endblock %}
+    {% load static %}
+    <script>
+        function phonenumber(value){
+            var phoneno = /^\d{10}$/;
+            if(value.match(phoneno)){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        function check(event) {
+            const url = "http://127.0.0.1:8000/api/leads/";
+            var count = 0;
+            var alert_flag = 0;
+            const data = {
+                "agent": parseInt(document.getElementById('message').innerHTML),
+                "name" : document.getElementById('name').value,
+                'phone_number' : document.getElementById('phone_number').value,
+                'address' : document.getElementById('address').value,
+                'status' : "ONGOING"
+                };
+            if(document.getElementById('name').value == ""){
+                document.getElementById('name-alert').style.display = 'block';
+            }
+            else{
+                document.getElementById('name-alert').style.display = 'none';
+                count+=1;
+            }
+            if(document.getElementById('phone_number').value == ""){
+                document.getElementById('phone-alert').style.display = 'block';
+            }
+            else{
+                if(phonenumber(document.getElementById('phone_number').value) == false){
+                    document.getElementById('phone-alert').style.display = 'block';
+                    document.getElementById('phone-alert').innerHTML = '*Please enter a valid Phone No.';
+                }
+                else{
+                    document.getElementById('phone-alert').style.display = 'none';
+                    count+=1;
+                }
+            }
+            if(document.getElementById('address').value == ""){
+                document.getElementById('address-alert').style.display = 'block';
+            }
+            else{
+                document.getElementById('address-alert').style.display = 'none';
+                count+=1;
+            }
+            if(count==3){
+                fetch(url, {
+                    method: "POST",
+                    credentials: "same-origin",
+                    headers: {
+                        "X-CSRFToken" : getCookie('csrftoken'),
+                        "Accept": "application/json",
+                        "Content-Type": "application/json; charset=UTF-8"
+                    },
+                    body: JSON.stringify(data)
+                }).then(function(response) {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error("Could not reach the API: " + response.statusText);
+                    }
+                }).then(function(data) {
+                    document.getElementById("message").innerHTML = data.encoded;
+                    window.location = "http://127.0.0.1:8000/home/";
+                }).catch(function(error) {
+                    document.getElementById("message").innerHTML = error.message;
+                    alert(error);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
