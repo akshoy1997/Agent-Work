@@ -77,7 +77,7 @@
             return cookieValue;
         }
         function check(event) {
-            const url = "http://vendor-django-app.herokuapp.com/api/leads/";
+            const url = "https://vendor-django-app.herokuapp.com/api/leads/";
             var count = 0;
             var alert_flag = 0;
             const data = {
@@ -132,7 +132,7 @@
                     }
                 }).then(function(data) {
                     document.getElementById("message").innerHTML = data.encoded;
-                    window.location = "http://vendor-django-app.herokuapp.com/home/";
+                    window.location = "https://vendor-django-app.herokuapp.com/home/";
                 }).catch(function(error) {
                     document.getElementById("message").innerHTML = error.message;
                     alert(error);
