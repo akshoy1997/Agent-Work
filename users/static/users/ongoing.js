@@ -34,6 +34,14 @@ request.onload = function () {
         const p3 = document.createElement('p');
         p3.textContent = `Status: ${item.status}`;
 
+        const A = document.createElement('a');
+        A.setAttribute('href', "lead/status_update/");
+
+        const Btn = document.createElement('button');
+        Btn.setAttribute('class', 'submit status_update');
+        Btn.setAttribute('onClick', `storeID(${item.id})`);
+        Btn.textContent = "Change Status";
+
         const p4 = document.createElement('p');
         p4.textContent = `ID: ${item.id}`;
         p4.setAttribute('style','display:none;')
@@ -54,6 +62,8 @@ request.onload = function () {
         card.appendChild(p4);
         card.appendChild(a);
         a.appendChild(btn);
+        card.appendChild(A);
+        A.appendChild(Btn);
         count++;
       }
     });

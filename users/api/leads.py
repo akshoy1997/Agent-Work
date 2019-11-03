@@ -28,6 +28,13 @@ class LeadViewSet(BaseModelViewSet):
         user = self.request.user
         return Lead.objects.filter(agent=user)
 
+    def partial_update(self, request, pk, *args, **kwargs):
+        kwargs['partial'] = True
+        lead = Lead.objects.get(id=pk)
+        lead.status = request.data['status']
+        lead.save()
+        return Response({'message': 'Partially Updated'})
+
         
     
     

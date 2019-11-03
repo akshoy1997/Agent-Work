@@ -11,6 +11,7 @@ urlpatterns = [
     path('home/meetings/',views.meetingsView, name='meetings'),
     path('lead/create/',views.leadCreateView, name='lead_create'),
     path('home/meetings/create/',views.meetingCreateView, name='meeting_create'),
+    path('home/lead/status_update/',views.statusUpdateView, name='status_update'),
     path('converted/',views.convertedView, name='converted'),
     path('closed/',views.closedView, name='closed'),
     path('register/',views.registerView, name='register'),

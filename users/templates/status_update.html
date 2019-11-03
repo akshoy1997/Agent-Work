@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Custom CSS -->
+    {% load static %}
+    <link href="{% static 'users/style.css' %}" rel="stylesheet">
+
+    <title>Create a New Meeting</title>
+
+</head>
+<body>
+    {% block content %}
+    <div class="topnav">
+        <a href="#">
+            {% if request.user.is_authenticated %}
+                Welcome '{{ request.user.username }}', Manage your Work Here!
+            {% endif %}
+        </a>
+        <a style="float: right;" href="{% url 'logout' %}">Logout</a>
+        <a style="float: right;" href="{% url 'converted' %}">Closed</a>
+        <a style="float: right;" href="{% url 'home' %}">In Progress</a>
+    </div>
+    <div class="card form login">
+        <form>
+            {% csrf_token %}
+            <h1 class="title border-bottom mb-4">Update Status of Lead</h1>
+            <select id="status" name="status">
+                <option value="Converted">Converted</option>
+                <option value="Closed">Lost</option>
+            </select>           
+            <input onClick="check()" class="submit" value="Submit" readonly>
+        </form>
+        <div style="display:none;" id="message"></div>   
+    </div>
+    {% endblock %}
+    {% load static %}
+    <script>
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        function check(event) {
+            const url = "https://vendor-django-app.herokuapp.com/api/leads/" + localStorage["lead_id"] + "/";
+            const data = {
+                "status" : document.getElementById('status').value,
+            };
+            fetch(url, {
+                method: "PATCH",
+                credentials: "same-origin",
+                headers: {
+                    "X-CSRFToken" : getCookie('csrftoken'),
+                    "Accept": "application/json",
+                    "Content-Type": "application/json; charset=UTF-8"
+                },
+                body: JSON.stringify(data)
+            }).then(function(response) {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error("Could not reach the API: " + response.statusText);
+                }
+            }).then(function(data) {
+                document.getElementById("message").innerHTML = data.encoded;
+                window.location = "https://vendor-django-app.herokuapp.com/home/";
+            }).catch(function(error) {
+                document.getElementById("message").innerHTML = error.message;
+                alert(error);
+            });
+        }
+    </script>
+</body>
+</html>

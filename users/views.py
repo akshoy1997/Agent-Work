@@ -28,6 +28,10 @@ def meetingsView(request):
     return render(request, 'meetings.html')
 
 @login_required()
+def statusUpdateView(request):
+    return render(request, 'status_update.html')
+
+@login_required()
 def meetingCreateView(request):
     return render(request, 'meeting_create.html')
 
