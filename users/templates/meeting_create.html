@@ -58,6 +58,9 @@
     {% endblock %}
     {% load static %}
     <script>
+        const date = new Date()
+        document.getElementById('date').valueAsDate = date;
+        document.getElementById('time').defaultValue = date.getHours() + ":" + date.getMinutes();
         function getCookie(name) {
             var cookieValue = null;
             if (document.cookie && document.cookie !== '') {
