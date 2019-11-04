@@ -5,34 +5,44 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def indexView(request):
-    return redirect('login')
+    if request.user.is_authenticated:
+        return redirect('home')
+    else:
+        return redirect('login')
 
-@login_required()
 def homeView(request):
+    if request.user.is_authenticated==False:
+        return redirect('login')
     return render(request, 'index.html')
 
-@login_required()
 def leadCreateView(request):
+    if request.user.is_authenticated==False:
+        return redirect('login')
     return render(request, 'lead_create.html')
 
-@login_required()
 def convertedView(request):
+    if request.user.is_authenticated==False:
+        return redirect('login')
     return render(request, 'converted.html')
 
-@login_required()
 def closedView(request):
+    if request.user.is_authenticated==False:
+        return redirect('login')
     return render(request, 'closed.html')
 
-@login_required()
 def meetingsView(request):
+    if request.user.is_authenticated==False:
+        return redirect('login')
     return render(request, 'meetings.html')
 
-@login_required()
 def statusUpdateView(request):
+    if request.user.is_authenticated==False:
+        return redirect('login')
     return render(request, 'status_update.html')
 
-@login_required()
 def meetingCreateView(request):
+    if request.user.is_authenticated==False:
+        return redirect('login')
     return render(request, 'meeting_create.html')
 
 def registerView(request):
