@@ -21,7 +21,7 @@
     <div class="topnav">
         <a href="#">
             {% if request.user.is_authenticated %}
-                Welcome '{{ request.user.username }}'
+                Vendor-App: Welcome '{{ request.user.username }}'
             {% endif %}
         </a>
         <a style="float: right;" href="{% url 'logout' %}">Logout</a>
