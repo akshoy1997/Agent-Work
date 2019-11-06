@@ -4,7 +4,22 @@
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
+    <!-- Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#3367D6">
+    <!-- Windows Phone -->
+    <meta name="msapplication-navbutton-color" content="#3367D6">
+    <!-- iOS Safari -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="#3367D6">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- icon in the highest resolution we need it for -->
+    <link rel="icon" sizes="192x192" href="../../static/users/images/icons-192.png">
+
+    <!-- reuse same icon for Safari -->
+    <link rel="apple-touch-icon" href="../../static/users/images/icons-192.png">
+
+    <!-- multiple icons for IE -->
+    <meta name="msapplication-square310x310logo" content="../static/users/images/icons-192.png">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -12,6 +27,9 @@
     <!-- Custom CSS -->
     {% load static %}
     <link href="{% static "users/style.css" %}" rel="stylesheet">
+
+    <!--Manifest.json-->
+    <link rel="manifest" href="{% static "users/manifest.json" %}" rel="manifest">
 
     <title>Vendor Login</title>
 
@@ -45,8 +63,50 @@
                 <p style="margin-top: 10px;">
                     Forgot Your Password? <br/><a style="color: red; text-decoration: none; font-weight: bold;" href="{% url 'password_reset' %}">Reset Here</a>
                 </p>
+                <button id="install" class="btn btn-outline-info" style="display:none;">
+                    Install App
+                </button>
             </div>
         </div>
     {% endblock content %}
+    <script>
+        var serviceWorkerPath = "/serviceworker.js";
+        var charchaServiceWorker = registerServiceWorker(serviceWorkerPath);
+        function registerServiceWorker(serviceWorkerPath){
+            if('serviceWorker' in navigator){
+            navigator.serviceWorker
+                .register(serviceWorkerPath)
+                .then(
+                    function(reg){
+                    console.log('service worker registered');
+                    }
+                ).catch(function(error){
+                    console.log(error)
+                });
+            }
+        }
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Stash the event so it can be triggered later.
+            deferredPrompt = e;
+            // Update UI notify the user they can add to home screen
+            document.getElementById("install").style.display = "block";
+        });
+        document.getElementById("install").addEventListener('click', (e) => {
+            // hide our user interface that shows our A2HS button
+            document.getElementById("install").style.display = 'none';
+            // Show the prompt
+            deferredPrompt.prompt();
+            // Wait for the user to respond to the prompt
+            deferredPrompt.userChoice
+                .then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the A2HS prompt');
+                } else {
+                    console.log('User dismissed the A2HS prompt');
+                }
+                deferredPrompt = null;
+            });
+        });
+    </script>
 </body>
 </html>

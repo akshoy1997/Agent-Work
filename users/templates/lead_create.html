@@ -4,16 +4,34 @@
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
+    <!-- Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#3367D6">
+    <!-- Windows Phone -->
+    <meta name="msapplication-navbutton-color" content="#3367D6">
+    <!-- iOS Safari -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="#3367D6">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- icon in the highest resolution we need it for -->
+    <link rel="icon" sizes="192x192" href="../static/users/images/icons-192.png">
+
+    <!-- reuse same icon for Safari -->
+    <link rel="apple-touch-icon" href="../static/users/images/icons-192.png">
+
+    <!-- multiple icons for IE -->
+    <meta name="msapplication-square310x310logo" content="../static/users/images/icons-192.png">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <!-- Custom CSS -->
     {% load static %}
-    <link href="{% static 'users/style.css' %}" rel="stylesheet">
+    <link href="{% static "users/style.css" %}" rel="stylesheet">
 
-    <title>Create a New Lead</title>
+    <!--Manifest.json-->
+    <link rel="manifest" href="{% static "users/manifest.json" %}" rel="manifest">
+
+    <title>Create Lead</title>
 
 </head>
 <body>
@@ -156,6 +174,23 @@
                 }).catch(function(error) {
                     document.getElementById("message").innerHTML = error.message;
                     alert(error);
+                });
+            }
+        }
+    </script>
+    <script>
+        var serviceWorkerPath = "/serviceworker.js";
+        var charchaServiceWorker = registerServiceWorker(serviceWorkerPath);
+        function registerServiceWorker(serviceWorkerPath){
+            if('serviceWorker' in navigator){
+            navigator.serviceWorker
+                .register(serviceWorkerPath)
+                .then(
+                    function(reg){
+                    console.log('service worker registered');
+                    }
+                ).catch(function(error){
+                    console.log(error)
                 });
             }
         }
