@@ -38,5 +38,11 @@ class Lead(BaseModel):
         max_length=10,
         unique=False
     )
-
-    
+    latitude = models.FloatField(
+        unique=False,
+        null=True
+    )
+    longitude = models.FloatField( 
+        unique=False,
+        null=True
+    )

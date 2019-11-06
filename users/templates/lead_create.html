@@ -44,6 +44,10 @@
             <input type="text" id="address" name="address" placeholder="Address">
             <span class="alerts" id="address-alert" style="display: none;">*Address can't be Empty</span>
             
+            <label class="alerts" id="location-alert" style="display:none; text-align:center;">
+                Location access is not given! Please allow location access to create a new lead!
+            </label>
+
             <input onClick="check()" class="submit" value="Submit" readonly>
         </form>
         <div style="display: none;" id="message">{{ request.user.id }}</div>   
@@ -51,6 +55,7 @@
     {% endblock %}
     {% load static %}
     <script>
+        var flag = 0;
         function phonenumber(value){
             var phoneno = /^\d{10}$/;
             if(value.match(phoneno)){
@@ -75,6 +80,17 @@
             }
             return cookieValue;
         }
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } 
+        }
+        getLocation();
+        function showPosition(position) {
+            localStorage["latitude"] = parseFloat(position.coords.latitude);  
+            localStorage["longitude"] = parseFloat(position.coords.longitude);
+            flag = 1;
+        }
         function check(event) {
             const url = "https://vendor-django-app.herokuapp.com/api/leads/";
             var count = 0;
@@ -84,7 +100,9 @@
                 "name" : document.getElementById('name').value,
                 'phone_number' : document.getElementById('phone_number').value,
                 'address' : document.getElementById('address').value,
-                'status' : "ONGOING"
+                'status' : "ONGOING",
+                "latitude" : localStorage["latitude"],
+                "longitude" : localStorage["longitude"],
                 };
             if(document.getElementById('name').value == ""){
                 document.getElementById('name-alert').style.display = 'block';
@@ -113,7 +131,10 @@
                 document.getElementById('address-alert').style.display = 'none';
                 count+=1;
             }
-            if(count==3){
+            if (flag==0){
+                document.getElementById('location-alert').style.display = 'block';
+            }
+            if(count==3 && flag==1){
                 fetch(url, {
                     method: "POST",
                     credentials: "same-origin",

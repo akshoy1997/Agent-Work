@@ -13,6 +13,8 @@ class LeadSerializer(BaseSerializer):
             'phone_number',
             'address',
             'status',
+            'latitude',
+            'longitude',
         )
 
 
@@ -34,7 +36,3 @@ class LeadViewSet(BaseModelViewSet):
         lead.status = request.data['status']
         lead.save()
         return Response({'message': 'Partially Updated'})
-
-        
-    
-    
