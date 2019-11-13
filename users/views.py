@@ -40,6 +40,16 @@ def statusUpdateView(request):
         return redirect('login')
     return render(request, 'status_update.html')
 
+def leadConvertedView(request):
+    if request.user.is_authenticated==False:
+        return redirect('login')
+    return render(request, 'lead_converted.html')
+
+def leadClosedView(request):
+    if request.user.is_authenticated==False:
+        return redirect('login')
+    return render(request, 'lead_closed.html')
+
 def meetingCreateView(request):
     if request.user.is_authenticated==False:
         return redirect('login')

@@ -39,7 +39,7 @@
     <div class="topnav">
         <a href="#">
             {% if request.user.is_authenticated %}
-            Vendor-App: Welcome '{{ request.user.username }}'
+                Welcome '{{ request.user.username }}', Manage your Work Here!
             {% endif %}
         </a>
         <a style="float: right;" href="{% url 'logout' %}">Logout</a>
@@ -47,64 +47,13 @@
         <a style="float: right;" href="{% url 'home' %}">In Progress</a>
     </div>
     <div class="card form login">
-        <form>
             {% csrf_token %}
             <h1 class="title border-bottom mb-4">Update Status of Lead</h1>
-            <select id="status" name="status">
-                <option value="Converted">Converted</option>
-                <option value="Closed">Lost</option>
-            </select>           
-            <input onClick="check()" class="submit" value="Submit" readonly>
-        </form>
-        <div style="display:none;" id="message"></div>   
+            <a href="{% url 'lead_converted' %}"><button class="submit">Mark as converted</button></a>
+            <a href="{% url 'lead_closed' %}"><button style="background-color:#d9534f;" class="submit">Mark as lost</button></a>  
     </div>
     {% endblock %}
     {% load static %}
-    <script>
-        function getCookie(name) {
-            var cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookie = cookies[i].trim();
-                    // Does this cookie string begin with the name we want?
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-        function check(event) {
-            const url = "https://vendor-django-app.herokuapp.com/api/leads/" + localStorage["lead_id"] + "/";
-            const data = {
-                "status" : document.getElementById('status').value,
-            };
-            fetch(url, {
-                method: "PATCH",
-                credentials: "same-origin",
-                headers: {
-                    "X-CSRFToken" : getCookie('csrftoken'),
-                    "Accept": "application/json",
-                    "Content-Type": "application/json; charset=UTF-8"
-                },
-                body: JSON.stringify(data)
-            }).then(function(response) {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error("Could not reach the API: " + response.statusText);
-                }
-            }).then(function(data) {
-                document.getElementById("message").innerHTML = data.encoded;
-                window.location = "https://vendor-django-app.herokuapp.com/home/";
-            }).catch(function(error) {
-                document.getElementById("message").innerHTML = error.message;
-                alert(error);
-            });
-        }
-    </script>
     <script>
         var serviceWorkerPath = "/serviceworker.js";
         var charchaServiceWorker = registerServiceWorker(serviceWorkerPath);
