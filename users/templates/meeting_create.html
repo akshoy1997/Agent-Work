@@ -39,7 +39,7 @@
     <div class="topnav">
         <a href="#">
             {% if request.user.is_authenticated %}
-            Vendor-App: Welcome '{{ request.user.username }}'
+                Welcome '{{ request.user.username }}', Manage your Work Here!
             {% endif %}
         </a>
         <a style="float: right;" href="{% url 'logout' %}">Logout</a>
@@ -50,29 +50,34 @@
         <form>
             {% csrf_token %}
             <h1 class="title border-bottom mb-4">Create a new Meeting</h1>
-            <label for="type">Type Of Meeting</label>
-            <select id="type" name="type">
-                <option value="INTRODUCTORY MEETING">Introductory Meeting</option>
-                <option value="FOLLOW-UP MEETING">Follow-Up Meeting</option>
+            <label for="status">Lead Status</label>
+            <select id="status" name="type">
+                <option value="COLD">Cold</option>
+                <option value="WARM">Warm</option>
+                <option value="HOT">Hot</option>
             </select>
-            <span class="alerts" id="type-alert" style="display: none;">*Type can't be Empty</span>
+            <span class="alerts" id="status-alert" style="display: none;">*Status can't be Empty</span>
         
             <label for="date">Date</label>
             <input type="date" id="date" name="date">
-            <span class="alerts" id="date-alert" style="display: none;">*Date can't be Empty</span>
 
             <label for="time">Time</label>
             <input type="time" id="time" name="date">
-            <span class="alerts" id="time-alert" style="display: none;">Time can't be Empty</span>
 
-            <label for="address">Venue</label>
+            <label for="venue">Venue</label>
             <input type="text" id="venue" name="venue" placeholder="Venue">
-            <span class="alerts" id="venue-alert" style="display: none;">*Venue can't be Empty</span>
             
-            <label class="alerts" id="location-alert" style="display:none; font-weight: bold;  text-align:center;">
+            <label for="date2">Follow-Up Date</label>
+            <input type="date" id="date2" name="date2">
+
+            <label for="details">Meeting Details</label>
+            <textarea type="textarea" rows="4" id="details" name="details"></textarea>
+            <span class="alerts" id="details-alert" style="display: none;">*Meeting details can't be Empty</span>
+            
+            <label class="alerts" id="location-alert" style="display:none; text-align:center;">
                 Location access is not given! Please allow location access to create a new meeting!
             </label>
-
+            
             <input onClick="check()" class="submit" value="Submit" readonly>
         </form>
         <div style="display:none;" id="message"></div>   
@@ -80,8 +85,8 @@
     {% endblock %}
     {% load static %}
     <script>
-        var flag = 0;
         const date = new Date()
+        var flag = 0;
         document.getElementById('date').valueAsDate = date;
         document.getElementById('time').defaultValue = date.getHours() + ":" + date.getMinutes();
         function getCookie(name) {
@@ -116,45 +121,42 @@
             var alert_flag = 0;
             const data = {
                 "lead": parseInt(localStorage["lead_id"]),
-                "type" : document.getElementById('type').value,
-                "date" : document.getElementById('date').value,
-                "time" : document.getElementById('time').value,
+                "type" : "FOLLOW-UP MEETING",
+                "status": document.getElementById('status').value,
                 'venue' : document.getElementById('venue').value,
+                "details" : document.getElementById('details').value,
                 "latitude" : localStorage["latitude"],
                 "longitude" : localStorage["longitude"],
                 };
-            if(document.getElementById('type').value == ""){
-                document.getElementById('type-alert').style.display = 'block';
+
+            if (document.getElementById('date').value !== ""){
+                data["date"] = document.getElementById('date').value;
+            }
+            if (document.getElementById('time').value !== ""){
+                data["time"] = document.getElementById('date').value;
+            }
+            if (document.getElementById('date2').value !== ""){
+                data["follow_up_date"] = document.getElementById('date2').value;
+            }
+            console.log(data);
+            if(document.getElementById('status').value == ""){
+                document.getElementById('status-alert').style.display = 'block';
             }
             else{
-                document.getElementById('type-alert').style.display = 'none';
+                document.getElementById('status-alert').style.display = 'none';
                 count+=1;
             }
-            if(document.getElementById('date').value == ""){
-                document.getElementById('date-alert').style.display = 'block';
+            if(document.getElementById('details').value == ""){
+                document.getElementById('details-alert').style.display = 'block';
             }
             else{
-                document.getElementById('date-alert').style.display = 'none';
-                count+=1;
-            }
-            if(document.getElementById('time').value == ""){
-                document.getElementById('time-alert').style.display = 'block';
-            }
-            else{
-                document.getElementById('time-alert').style.display = 'none';
-                count+=1;
-            }
-            if(document.getElementById('venue').value == ""){
-                document.getElementById('venue-alert').style.display = 'block';
-            }
-            else{
-                document.getElementById('venue-alert').style.display = 'none';
+                document.getElementById('details-alert').style.display = 'none';
                 count+=1;
             }
             if (flag==0){
-                document.getElementById('location-alert').style.display = 'block';
+                alert("Location access is not given! Please allow location access to create a new meeting!");
             }
-            if(count==4 && flag==1){
+            if(count==2 && flag==1){
                 fetch(url, {
                     method: "POST",
                     credentials: "same-origin",
@@ -172,7 +174,7 @@
                     }
                 }).then(function(data) {
                     document.getElementById("message").innerHTML = data.encoded;
-                    window.location = "https://vendor-django-app.herokuapp.com/home/meetings/";
+                    window.location = "https://vendor-django-app.herokuapp.com/home/meetings";
                 }).catch(function(error) {
                     document.getElementById("message").innerHTML = error.message;
                     alert(error);
@@ -181,21 +183,21 @@
         }
     </script>
     <script>
-        var serviceWorkerPath = "/serviceworker.js";
-        var charchaServiceWorker = registerServiceWorker(serviceWorkerPath);
-        function registerServiceWorker(serviceWorkerPath){
-            if('serviceWorker' in navigator){
-            navigator.serviceWorker
-                .register(serviceWorkerPath)
-                .then(
-                    function(reg){
-                    console.log('service worker registered');
-                    }
-                ).catch(function(error){
-                    console.log(error)
-                });
+            var serviceWorkerPath = "/serviceworker.js";
+            var charchaServiceWorker = registerServiceWorker(serviceWorkerPath);
+            function registerServiceWorker(serviceWorkerPath){
+                if('serviceWorker' in navigator){
+                navigator.serviceWorker
+                    .register(serviceWorkerPath)
+                    .then(
+                        function(reg){
+                        console.log('service worker registered');
+                        }
+                    ).catch(function(error){
+                        console.log(error)
+                    });
+                }
             }
-        }
-    </script>
+        </script>
 </body>
 </html>

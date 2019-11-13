@@ -21,15 +21,33 @@ class Meeting(BaseModel):
     )
     date = models.DateField(
         _(u"Conversation Date"), 
-        blank=False
+        blank=False,
+        null=True
     )
     time = models.TimeField(
         _(u"Conversation Time"), 
-        blank=False
+        blank=False,
+        null=True
+    )
+    follow_up_date = models.DateField(
+        _(u"Follow Up Date"), 
+        blank=False,
+        null=True
     )
     venue = models.CharField(
         max_length=100, 
-        unique=False
+        unique=False,
+        blank=True
+    )
+    status = models.CharField(
+        max_length=10,
+        unique=False,
+        null=True
+    )
+    details = models.CharField(
+        max_length=1000,
+        unique=False,
+        null=True
     )
     latitude = models.FloatField(
         unique=False,

@@ -12,6 +12,9 @@ class MeetingSerializer(BaseSerializer):
             'date',
             'time',
             'venue',
+            'status',
+            'details',
+            'follow_up_date',
             'latitude',
             'longitude',
         )

@@ -38,6 +38,16 @@ class Lead(BaseModel):
         max_length=10,
         unique=False
     )
+    target = models.CharField(
+        max_length=10,
+        unique=False,
+        null=True
+    )
+    details = models.CharField(
+        max_length=1000,
+        unique=False,
+        null=True
+    )
     latitude = models.FloatField(
         unique=False,
         null=True

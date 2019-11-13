@@ -6,7 +6,7 @@ container.setAttribute('class', 'container');
 app.appendChild(container);
 
 var request = new XMLHttpRequest();
-request.open('GET', "https://vendor-django-app.herokuapp.com/api/meetings/?lead_id=" + localStorage["lead_id"], true);
+request.open('GET', 'https://vendor-django-app.herokuapp.com/api/meetings/?lead_id=' + localStorage["lead_id"], true);
 request.onload = function () {
 
   // Begin accessing JSON data here
@@ -20,20 +20,43 @@ request.onload = function () {
         const h1 = document.createElement('h1');
         h1.textContent =  "Type: " + item.type;
 
-        const p1 = document.createElement('p');
-        p1.textContent = `Date: ${item.date}`;
-
-        const p2 = document.createElement('p');
-        p2.textContent = `Time: ${item.time}`;
-
-        const p3 = document.createElement('p');
-        p3.textContent = `Venue: ${item.venue}`;
-
         container.appendChild(card);
         card.appendChild(h1);
-        card.appendChild(p1);
-        card.appendChild(p2);
-        card.appendChild(p3);
+        if(item.date){
+          const p1 = document.createElement('p');
+          p1.textContent = `Date: ${item.date}`;
+          card.appendChild(p1);
+        }
+
+        if(item.time){
+          const p2 = document.createElement('p');
+          p2.textContent = `Time: ${item.time}`;
+          card.appendChild(p2);
+        }
+
+        if(item.venue){
+          const p3 = document.createElement('p');
+          p3.textContent = `Venue: ${item.venue}`;
+          card.appendChild(p3);
+        }
+
+        if(item.follow_up_date){
+          const p4 = document.createElement('p');
+          p4.textContent = `Follow-Up Date: ${item.follow_up_date}`;
+          card.appendChild(p4);
+        }
+
+        if(item.status){
+          const p5 = document.createElement('p');
+          p5.textContent = `Lead Status: ${item.status}`;
+          card.appendChild(p5);
+        }
+
+        if(item.details){
+          const p6 = document.createElement('p');
+          p6.textContent = `Meeting Details: ${item.details}`;
+          card.appendChild(p6);
+        }
         count++;
     });
   } else {

@@ -13,6 +13,8 @@ class LeadSerializer(BaseSerializer):
             'phone_number',
             'address',
             'status',
+            'details',
+            'target',
             'latitude',
             'longitude',
         )
