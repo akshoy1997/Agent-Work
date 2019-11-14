@@ -13,6 +13,7 @@ urlpatterns = [
     path('lead/create/',views.leadCreateView, name='lead_create'),
     path('home/meetings/create/',views.meetingCreateView, name='meeting_create'),
     path('home/lead/status_update/',views.statusUpdateView, name='status_update'),
+    path('home/lead/first_meeting/',views.firstMeetingView, name='first_meeting'),
     path('home/lead/closed/',views.leadClosedView, name='lead_closed'),
     path('home/lead/converted/',views.leadConvertedView, name='lead_converted'),
     path('converted/',views.convertedView, name='converted'),

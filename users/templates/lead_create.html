@@ -79,26 +79,7 @@
                 Location access is not given! Please allow location access to create a new lead!
             </label>
 
-            <h1 class="title border-bottom mb-4">Details of the first Meeting</h1>
-
-            <label for="status">Lead Status</label>
-            <select id="status" name="type">
-                <option value="COLD">Cold</option>
-                <option value="WARM">Warm</option>
-                <option value="HOT">Hot</option>
-            </select>
-            <span class="alerts" id="status-alert" style="display: none;">*Status can't be Empty</span>
-
-            <label for="date">Follow-Up Date</label>
-            <input type="date" id="date" name="date">
-
-            <label for="details2">Meeting Details</label>
-            <textarea type="textarea" rows="4" id="details2" name="details2"></textarea>
-            <span class="alerts" id="details2-alert" style="display: none;">*Meeting details can't be Empty</span>
-
-            <input onClick="check()" class="submit" value="Create Lead" readonly>
-            <input onClick="check2()" class="submit" value="Create Lead & Mark as Converted" readonly>
-            <input onClick="check3()" style="background-color: #d9534f;" class="submit" value="Create Lead & Mark as Lost" readonly>
+            <input onClick="check()" class="submit" value="Continue" readonly>
         </form>
         <div style="display: none;" id="message">{{ request.user.id }}</div>   
     </div>
@@ -106,15 +87,6 @@
     {% load static %}
     <script>
         var flag = 0;
-        var request = new XMLHttpRequest();
-        request.open('GET', 'https://vendor-django-app.herokuapp.com/api/leads/', true);
-        request.onload = function () {
-            // Begin accessing JSON data here
-            var datas = JSON.parse(this.response);
-            localStorage["lead_id"] = datas[0].id + 1
-        }
-        request.send();
-        localStorage["agent_id"] =  parseInt(document.getElementById("message").innerHTML);
         function phonenumber(value){
             var phoneno = /^\d{10}$/;
             if(value.match(phoneno)){
@@ -150,25 +122,10 @@
             localStorage["longitude"] = parseFloat(position.coords.longitude);
             flag = 1;
         }
-        function formatDate() {
-            var d = new Date(),
-            month = '' + (d.getMonth() + 1),
-            day = '' + d.getDate(),
-            year = d.getFullYear();
-
-            if (month.length < 2) 
-                month = '0' + month;
-            if (day.length < 2) 
-                day = '0' + day;
-
-            return [year, month, day].join('-');
-        }
+        localStorage["agent_id"] =  parseInt(document.getElementById("message").innerHTML);
         function check(event) {
             var url = "https://vendor-django-app.herokuapp.com/api/leads/";
-            var url2 = "https://vendor-django-app.herokuapp.com/api/meetings/";
             var count = 0;
-            var date = new Date()
-            var time = date.getHours() + ":" + date.getMinutes();
             var data = {
                 "agent": localStorage["agent_id"],
                 "name" : document.getElementById('name').value,
@@ -180,20 +137,6 @@
                 "latitude" : localStorage["latitude"],
                 "longitude" : localStorage["longitude"],
                 };
-            var data2 = {
-                "lead" : parseInt(localStorage["lead_id"]),
-                "type" : "INTRODUCTORY MEETING",
-                "status": document.getElementById('status').value,
-                "date" : formatDate(date),
-                "time" : time,
-                'venue' : "",
-                "details" : document.getElementById('details2').value,
-                "latitude" : localStorage["latitude"],
-                "longitude" : localStorage["longitude"],
-            }
-            if (document.getElementById('date').value !== ""){
-                data2["follow_up_date"] = document.getElementById('date').value;
-            }
             if(document.getElementById('target').value == ""){
                 document.getElementById('target-alert').style.display = 'block';
             }
@@ -235,24 +178,10 @@
                 document.getElementById('details-alert').style.display = 'none';
                 count+=1;
             }
-            if(document.getElementById('status').value == ""){
-                document.getElementById('status-alert').style.display = 'block';
-            }
-            else{
-                document.getElementById('status-alert').style.display = 'none';
-                count+=1;
-            }
-            if(document.getElementById('details2').value == ""){
-                document.getElementById('details2-alert').style.display = 'block';
-            }
-            else{
-                document.getElementById('details2-alert').style.display = 'none';
-                count+=1;
-            }
             if (flag==0){
                 document.getElementById('location-alert').style.display = 'block';
             }
-            if(count==7 && flag==1){
+            if(count==5 && flag==1){
                 fetch(url, {
                     method: "POST",
                     credentials: "same-origin",
@@ -270,305 +199,12 @@
                     }
                 }).then(function(data) {
                     document.getElementById("message").innerHTML = data.encoded;
-                    fetch(url2, {
-                        method: "POST",
-                        credentials: "same-origin",
-                        headers: {
-                            "X-CSRFToken" : getCookie('csrftoken'),
-                            "Accept": "application/json",
-                            "Content-Type": "application/json; charset=UTF-8"
-                        },
-                        body: JSON.stringify(data2)
-                    }).then(function(response) {
-                        if (response.ok) {
-                            return response.json();
-                        } else {
-                            throw new Error("Could not reach the API: " + response.statusText);
-                        }
-                    }).then(function(data2) {
-                        document.getElementById("message").innerHTML = data2.encoded;
-                        window.location = "https://vendor-django-app.herokuapp.com/home/";
-                    }).catch(function(error) {
-                        document.getElementById("message").innerHTML = error.message;
-                        alert(error);
-                    });
+                    window.location = "https://vendor-django-app.herokuapp.com/home/lead/first_meeting";
                 }).catch(function(error) {
                     document.getElementById("message").innerHTML = error.message;
                     alert(error);
                 });
-                console.log(data2);
                 
-            }
-        }
-        function check2(event) {
-            var url = "https://vendor-django-app.herokuapp.com/api/leads/";
-            var url2 = "https://vendor-django-app.herokuapp.com/api/meetings/";
-            var count = 0;
-            var date = new Date()
-            var time = date.getHours() + ":" + date.getMinutes();
-            var data3 = {
-                "agent": localStorage["agent_id"],
-                "name" : document.getElementById('name').value,
-                'phone_number' : document.getElementById('phone_number').value,
-                'address' : document.getElementById('address').value,
-                'status' : "ONGOING",
-                'target' : document.getElementById('target').value,
-                'details' : document.getElementById('details').value,
-                "latitude" : localStorage["latitude"],
-                "longitude" : localStorage["longitude"],
-                };
-            console.log(data3);
-            var data4 = {
-                "lead" : parseInt(localStorage["lead_id"]),
-                "type" : "INTRODUCTORY MEETING",
-                "status": document.getElementById('status').value,
-                "date" : formatDate(date),
-                "time" : time,
-                'venue' : "",
-                "details" : document.getElementById('details2').value,
-                "latitude" : localStorage["latitude"],
-                "longitude" : localStorage["longitude"],
-            }
-            if (document.getElementById('date').value !== ""){
-                data4["follow_up_date"] = document.getElementById('date').value;
-            }
-            if(document.getElementById('target').value == ""){
-                document.getElementById('target-alert').style.display = 'block';
-            }
-            else{
-                document.getElementById('target-alert').style.display = 'none';
-                count+=1;
-            }
-            if(document.getElementById('name').value == ""){
-                document.getElementById('name-alert').style.display = 'block';
-            }
-            else{
-                document.getElementById('name-alert').style.display = 'none';
-                count+=1;
-            }
-            if(document.getElementById('phone_number').value == ""){
-                document.getElementById('phone-alert').style.display = 'block';
-            }
-            else{
-                if(phonenumber(document.getElementById('phone_number').value) == false){
-                    document.getElementById('phone-alert').style.display = 'block';
-                    document.getElementById('phone-alert').innerHTML = '*Please enter a valid Phone No.';
-                }
-                else{
-                    document.getElementById('phone-alert').style.display = 'none';
-                    count+=1;
-                }
-            }
-            if(document.getElementById('address').value == ""){
-                document.getElementById('address-alert').style.display = 'block';
-            }
-            else{
-                document.getElementById('address-alert').style.display = 'none';
-                count+=1;
-            }
-            if(document.getElementById('details').value == ""){
-                document.getElementById('details-alert').style.display = 'block';
-            }
-            else{
-                document.getElementById('details-alert').style.display = 'none';
-                count+=1;
-            }
-            if(document.getElementById('status').value == ""){
-                document.getElementById('status-alert').style.display = 'block';
-            }
-            else{
-                document.getElementById('status-alert').style.display = 'none';
-                count+=1;
-            }
-            if(document.getElementById('details2').value == ""){
-                document.getElementById('details2-alert').style.display = 'block';
-            }
-            else{
-                document.getElementById('details2-alert').style.display = 'none';
-                count+=1;
-            }
-            if (flag==0){
-                document.getElementById('location-alert').style.display = 'block';
-            }
-            if(count==7 && flag==1){
-                fetch(url, {
-                    method: "POST",
-                    credentials: "same-origin",
-                    headers: {
-                        "X-CSRFToken" : getCookie('csrftoken'),
-                        "Accept": "application/json",
-                        "Content-Type": "application/json; charset=UTF-8"
-                    },
-                    body: JSON.stringify(data3)
-                }).then(function(response) {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        throw new Error("Could not reach the API: " + response.statusText);
-                    }
-                }).then(function(data3) {
-                    document.getElementById("message").innerHTML = data3.encoded;
-                    fetch(url2, {
-                        method: "POST",
-                        credentials: "same-origin",
-                        headers: {
-                            "X-CSRFToken" : getCookie('csrftoken'),
-                            "Accept": "application/json",
-                            "Content-Type": "application/json; charset=UTF-8"
-                        },
-                        body: JSON.stringify(data4)
-                    }).then(function(response) {
-                        if (response.ok) {
-                            return response.json();
-                        } else {
-                            throw new Error("Could not reach the API: " + response.statusText);
-                        }
-                    }).then(function(data4) {
-                        document.getElementById("message").innerHTML = data4.encoded;
-                        window.location = "https://vendor-django-app.herokuapp.com/home/lead/converted/";
-                    }).catch(function(error) {
-                        document.getElementById("message").innerHTML = error.message;
-                        alert(error);
-                    });
-                }).catch(function(error) {
-                    document.getElementById("message").innerHTML = error.message;
-                    alert(error);
-                });
-            }
-        }
-        function check3(event) {
-            var url = "https://vendor-django-app.herokuapp.com/api/leads/";
-            var url2 = "https://vendor-django-app.herokuapp.com/api/meetings/";
-            var count = 0;
-            var date = new Date()
-            var time = date.getHours() + ":" + date.getMinutes();
-            var data5 = {
-                "agent":  localStorage["agent_id"],
-                "name" : document.getElementById('name').value,
-                'phone_number' : document.getElementById('phone_number').value,
-                'address' : document.getElementById('address').value,
-                'status' : "ONGOING",
-                'target' : document.getElementById('target').value,
-                'details' : document.getElementById('details').value,
-                "latitude" : localStorage["latitude"],
-                "longitude" : localStorage["longitude"],
-                };
-            var data6 = {
-                "lead" : parseInt(localStorage["lead_id"]),
-                "type" : "INTRODUCTORY MEETING",
-                "status": document.getElementById('status').value,
-                "date" : formatDate(date),
-                "time" : time,
-                'venue' : "",
-                "details" : document.getElementById('details2').value,
-                "latitude" : localStorage["latitude"],
-                "longitude" : localStorage["longitude"],
-            }
-            if (document.getElementById('date').value !== ""){
-                data6["follow_up_date"] = document.getElementById('date').value;
-            }
-            if(document.getElementById('target').value == ""){
-                document.getElementById('target-alert').style.display = 'block';
-            }
-            else{
-                document.getElementById('target-alert').style.display = 'none';
-                count+=1;
-            }
-            if(document.getElementById('name').value == ""){
-                document.getElementById('name-alert').style.display = 'block';
-            }
-            else{
-                document.getElementById('name-alert').style.display = 'none';
-                count+=1;
-            }
-            if(document.getElementById('phone_number').value == ""){
-                document.getElementById('phone-alert').style.display = 'block';
-            }
-            else{
-                if(phonenumber(document.getElementById('phone_number').value) == false){
-                    document.getElementById('phone-alert').style.display = 'block';
-                    document.getElementById('phone-alert').innerHTML = '*Please enter a valid Phone No.';
-                }
-                else{
-                    document.getElementById('phone-alert').style.display = 'none';
-                    count+=1;
-                }
-            }
-            if(document.getElementById('address').value == ""){
-                document.getElementById('address-alert').style.display = 'block';
-            }
-            else{
-                document.getElementById('address-alert').style.display = 'none';
-                count+=1;
-            }
-            if(document.getElementById('details').value == ""){
-                document.getElementById('details-alert').style.display = 'block';
-            }
-            else{
-                document.getElementById('details-alert').style.display = 'none';
-                count+=1;
-            }
-            if(document.getElementById('status').value == ""){
-                document.getElementById('status-alert').style.display = 'block';
-            }
-            else{
-                document.getElementById('status-alert').style.display = 'none';
-                count+=1;
-            }
-            if(document.getElementById('details2').value == ""){
-                document.getElementById('details2-alert').style.display = 'block';
-            }
-            else{
-                document.getElementById('details2-alert').style.display = 'none';
-                count+=1;
-            }
-            if (flag==0){
-                document.getElementById('location-alert').style.display = 'block';
-            }
-            if(count==7 && flag==1){
-                fetch(url, {
-                    method: "POST",
-                    credentials: "same-origin",
-                    headers: {
-                        "X-CSRFToken" : getCookie('csrftoken'),
-                        "Accept": "application/json",
-                        "Content-Type": "application/json; charset=UTF-8"
-                    },
-                    body: JSON.stringify(data5)
-                }).then(function(response) {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        throw new Error("Could not reach the API: " + response.statusText);
-                    }
-                }).then(function(data5) {
-                    document.getElementById("message").innerHTML = data5.encoded;
-                    fetch(url2, {
-                        method: "POST",
-                        credentials: "same-origin",
-                        headers: {
-                            "X-CSRFToken" : getCookie('csrftoken'),
-                            "Accept": "application/json",
-                            "Content-Type": "application/json; charset=UTF-8"
-                        },
-                        body: JSON.stringify(data6)
-                    }).then(function(response) {
-                        if (response.ok) {
-                            return response.json();
-                        } else {
-                            throw new Error("Could not reach the API: " + response.statusText);
-                        }
-                    }).then(function(data6) {
-                        document.getElementById("message").innerHTML = data6.encoded;
-                        window.location = "https://vendor-django-app.herokuapp.com/home/lead/closed/";
-                    }).catch(function(error) {
-                        document.getElementById("message").innerHTML = error.message;
-                        alert(error);
-                    });
-                }).catch(function(error) {
-                    document.getElementById("message").innerHTML = error.message;
-                    alert(error);
-                });
             }
         }
     </script>

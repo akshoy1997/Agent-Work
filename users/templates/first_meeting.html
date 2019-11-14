@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <!-- Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#3367D6">
+    <!-- Windows Phone -->
+    <meta name="msapplication-navbutton-color" content="#3367D6">
+    <!-- iOS Safari -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="#3367D6">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- icon in the highest resolution we need it for -->
+    <link rel="icon" sizes="192x192" href="../static/users/images/icons-192.png">
+
+    <!-- reuse same icon for Safari -->
+    <link rel="apple-touch-icon" href="../static/users/images/icons-192.png">
+
+    <!-- multiple icons for IE -->
+    <meta name="msapplication-square310x310logo" content="../static/users/images/icons-192.png">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Custom CSS -->
+    {% load static %}
+    <link href="{% static "users/style.css" %}" rel="stylesheet">
+
+    <!--Manifest.json-->
+    <link rel="manifest" href="{% static "users/manifest.json" %}" rel="manifest">
+
+    <title>Create Lead</title>
+
+</head>
+<body>
+    {% block content %}
+    <div class="topnav">
+        <a href="#">
+            {% if request.user.is_authenticated %}
+                Welcome '{{ request.user.username }}', Manage your Work Here!
+            {% endif %}
+        </a>
+        <a style="float: right;" href="{% url 'logout' %}">Logout</a>
+        <a style="float: right;" href="{% url 'converted' %}">Closed</a>
+        <a style="float: right;" href="{% url 'home' %}">In Progress</a>
+    </div>
+    <div class="card form login">
+        <form>
+            {% csrf_token %}
+            <h1 class="title border-bottom mb-4">Details of the first Meeting</h1>
+
+            <label for="status">Lead Status</label>
+            <select id="status" name="type">
+                <option value="COLD">Cold</option>
+                <option value="WARM">Warm</option>
+                <option value="HOT">Hot</option>
+            </select>
+            <span class="alerts" id="status-alert" style="display: none;">*Status can't be Empty</span>
+
+            <label for="date">Follow-Up Date</label>
+            <input type="date" id="date" name="date">
+
+            <label for="details">Meeting Details</label>
+            <textarea type="textarea" rows="4" id="details" name="details"></textarea>
+            <span class="alerts" id="details-alert" style="display: none;">*Meeting details can't be Empty</span>
+
+            <input onClick="check()" class="submit" value="Submit" readonly>
+            <input onClick="check2()" class="submit" value="Mark as Converted" readonly>
+            <input onClick="check3()" style="background-color: #d9534f;" class="submit" value="Mark as Lost" readonly>
+        </form>
+        <div style="display: none;" id="message">{{ request.user.id }}</div>   
+    </div>
+    {% endblock %}
+    {% load static %}
+    <script>
+        var flag = 0;
+        var request = new XMLHttpRequest();
+        request.open('GET', 'https://vendor-django-app.herokuapp.com/api/leads/', true);
+        request.onload = function () {
+            // Begin accessing JSON data here
+            var datas = JSON.parse(this.response);
+            localStorage["lead_id"] = datas[0].id
+        }
+        request.send();
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } 
+        }
+        getLocation();
+        function showPosition(position) {
+            localStorage["latitude"] = parseFloat(position.coords.latitude);  
+            localStorage["longitude"] = parseFloat(position.coords.longitude);
+            flag = 1;
+        }
+        function formatDate() {
+            var d = new Date(),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+            if (month.length < 2) 
+                month = '0' + month;
+            if (day.length < 2) 
+                day = '0' + day;
+
+            return [year, month, day].join('-');
+        }
+        function check(event) {
+            var url = "https://vendor-django-app.herokuapp.com/api/meetings/";
+            var count = 0;
+            var date = new Date()
+            var time = date.getHours() + ":" + date.getMinutes();
+            var data = {
+                "lead" : parseInt(localStorage["lead_id"]),
+                "type" : "INTRODUCTORY MEETING",
+                "status": document.getElementById('status').value,
+                "date" : formatDate(date),
+                "time" : time,
+                'venue' : "",
+                "details" : document.getElementById('details').value,
+                "latitude" : localStorage["latitude"],
+                "longitude" : localStorage["longitude"],
+            }
+            if (document.getElementById('date').value !== ""){
+                data["follow_up_date"] = document.getElementById('date').value;
+            }
+            if(document.getElementById('details').value == ""){
+                document.getElementById('details-alert').style.display = 'block';
+            }
+            else{
+                document.getElementById('details-alert').style.display = 'none';
+                count+=1;
+            }
+            if(document.getElementById('status').value == ""){
+                document.getElementById('status-alert').style.display = 'block';
+            }
+            else{
+                document.getElementById('status-alert').style.display = 'none';
+                count+=1;
+            }
+            if (flag==0){
+                document.getElementById('location-alert').style.display = 'block';
+            }
+            if(count==2 && flag==1){
+                fetch(url, {
+                    method: "POST",
+                    credentials: "same-origin",
+                    headers: {
+                        "X-CSRFToken" : getCookie('csrftoken'),
+                        "Accept": "application/json",
+                        "Content-Type": "application/json; charset=UTF-8"
+                    },
+                    body: JSON.stringify(data)
+                }).then(function(response) {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error("Could not reach the API: " + response.statusText);
+                    }
+                }).then(function(data) {
+                    document.getElementById("message").innerHTML = data.encoded;
+                    window.location = "https://vendor-django-app.herokuapp.com/home/";
+                }).catch(function(error) {
+                    document.getElementById("message").innerHTML = error.message;
+                    alert(error);
+                });
+                
+            }
+        }
+        function check2(event) {
+            var url = "https://vendor-django-app.herokuapp.com/api/meetings/";
+            var count = 0;
+            var date = new Date()
+            var time = date.getHours() + ":" + date.getMinutes();
+            var data = {
+                "lead" : parseInt(localStorage["lead_id"]),
+                "type" : "INTRODUCTORY MEETING",
+                "status": document.getElementById('status').value,
+                "date" : formatDate(date),
+                "time" : time,
+                'venue' : "",
+                "details" : document.getElementById('details').value,
+                "latitude" : localStorage["latitude"],
+                "longitude" : localStorage["longitude"],
+            }
+            if (document.getElementById('date').value !== ""){
+                data["follow_up_date"] = document.getElementById('date').value;
+            }
+            if(document.getElementById('details').value == ""){
+                document.getElementById('details-alert').style.display = 'block';
+            }
+            else{
+                document.getElementById('details-alert').style.display = 'none';
+                count+=1;
+            }
+            if(document.getElementById('status').value == ""){
+                document.getElementById('status-alert').style.display = 'block';
+            }
+            else{
+                document.getElementById('status-alert').style.display = 'none';
+                count+=1;
+            }
+            if (flag==0){
+                document.getElementById('location-alert').style.display = 'block';
+            }
+            if(count==2 && flag==1){
+                fetch(url, {
+                    method: "POST",
+                    credentials: "same-origin",
+                    headers: {
+                        "X-CSRFToken" : getCookie('csrftoken'),
+                        "Accept": "application/json",
+                        "Content-Type": "application/json; charset=UTF-8"
+                    },
+                    body: JSON.stringify(data)
+                }).then(function(response) {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error("Could not reach the API: " + response.statusText);
+                    }
+                }).then(function(data) {
+                    document.getElementById("message").innerHTML = data.encoded;
+                    window.location = "https://vendor-django-app.herokuapp.com/home/lead/converted";
+                }).catch(function(error) {
+                    document.getElementById("message").innerHTML = error.message;
+                    alert(error);
+                });
+                
+            }
+        }
+        function check3(event) {
+            var url = "https://vendor-django-app.herokuapp.com/api/meetings/";
+            var count = 0;
+            var date = new Date()
+            var time = date.getHours() + ":" + date.getMinutes();
+            var data = {
+                "lead" : parseInt(localStorage["lead_id"]),
+                "type" : "INTRODUCTORY MEETING",
+                "status": document.getElementById('status').value,
+                "date" : formatDate(date),
+                "time" : time,
+                'venue' : "",
+                "details" : document.getElementById('details').value,
+                "latitude" : localStorage["latitude"],
+                "longitude" : localStorage["longitude"],
+            }
+            if (document.getElementById('date').value !== ""){
+                data["follow_up_date"] = document.getElementById('date').value;
+            }
+            if(document.getElementById('details').value == ""){
+                document.getElementById('details-alert').style.display = 'block';
+            }
+            else{
+                document.getElementById('details-alert').style.display = 'none';
+                count+=1;
+            }
+            if(document.getElementById('status').value == ""){
+                document.getElementById('status-alert').style.display = 'block';
+            }
+            else{
+                document.getElementById('status-alert').style.display = 'none';
+                count+=1;
+            }
+            if (flag==0){
+                document.getElementById('location-alert').style.display = 'block';
+            }
+            if(count==2 && flag==1){
+                fetch(url, {
+                    method: "POST",
+                    credentials: "same-origin",
+                    headers: {
+                        "X-CSRFToken" : getCookie('csrftoken'),
+                        "Accept": "application/json",
+                        "Content-Type": "application/json; charset=UTF-8"
+                    },
+                    body: JSON.stringify(data)
+                }).then(function(response) {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error("Could not reach the API: " + response.statusText);
+                    }
+                }).then(function(data) {
+                    document.getElementById("message").innerHTML = data.encoded;
+                    window.location = "https://vendor-django-app.herokuapp.com/home/lead/closed";
+                }).catch(function(error) {
+                    document.getElementById("message").innerHTML = error.message;
+                    alert(error);
+                });
+                
+            }
+        }
+    </script>
+    <script>
+            var serviceWorkerPath = "/serviceworker.js";
+            var charchaServiceWorker = registerServiceWorker(serviceWorkerPath);
+            function registerServiceWorker(serviceWorkerPath){
+                if('serviceWorker' in navigator){
+                navigator.serviceWorker
+                    .register(serviceWorkerPath)
+                    .then(
+                        function(reg){
+                        console.log('service worker registered');
+                        }
+                    ).catch(function(error){
+                        console.log(error)
+                    });
+                }
+            }
+        </script>
+</body>
+</html>

@@ -20,6 +20,11 @@ def leadCreateView(request):
         return redirect('login')
     return render(request, 'lead_create.html')
 
+def firstMeetingView(request):
+    if request.user.is_authenticated==False:
+        return redirect('login')
+    return render(request, 'first_meeting.html')
+
 def convertedView(request):
     if request.user.is_authenticated==False:
         return redirect('login')
