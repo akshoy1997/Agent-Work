@@ -113,7 +113,7 @@
             flag = 1;
         }
         function check(event) {
-            const url = "https://vendor-django-app.herokuapp.com/api/meetings/";
+            const url = "https://" + window.location.hostname + "/api/meetings/";
             var count = 0;
             var alert_flag = 0;
             const data = {
@@ -170,7 +170,7 @@
                     }
                 }).then(function(data) {
                     document.getElementById("message").innerHTML = data.encoded;
-                    window.location = "https://vendor-django-app.herokuapp.com/home/meetings";
+                    window.location = "https://"+ window.location.hostname + "/home/meetings";
                 }).catch(function(error) {
                     document.getElementById("message").innerHTML = error.message;
                     alert(error);

@@ -124,7 +124,7 @@
         }
         localStorage["agent_id"] =  parseInt(document.getElementById("message").innerHTML);
         function check(event) {
-            var url = "https://vendor-django-app.herokuapp.com/api/leads/";
+            var url = "https://" + window.location.hostname + "/api/leads/";
             var count = 0;
             var data = {
                 "agent": localStorage["agent_id"],
@@ -199,7 +199,7 @@
                     }
                 }).then(function(data) {
                     document.getElementById("message").innerHTML = data.encoded;
-                    window.location = "https://vendor-django-app.herokuapp.com/home/lead/first_meeting";
+                    window.location = "https://" + window.location.hostname + "/home/lead/first_meeting";
                 }).catch(function(error) {
                     document.getElementById("message").innerHTML = error.message;
                     alert(error);

@@ -81,8 +81,8 @@
             return cookieValue;
         }
         function check(event) {
-            const url1 = "https://vendor-django-app.herokuapp.com/api/leads/" + localStorage["lead_id"] + "/";
-            const url2 = "https://vendor-django-app.herokuapp.com/api/lead_history/";
+            const url1 = "https://" + window.location.hostname + "/api/leads/" + localStorage["lead_id"] + "/";
+            const url2 = "https://" + window.location.hostname + "/api/lead_history/";
             var count = 0;
             const data1 = {
                 "status" : "CONVERTED",
@@ -140,7 +140,7 @@
                     }
                 }).then(function(data2) {
                     document.getElementById("message").innerHTML = data2.encoded;
-                    window.location = "https://vendor-django-app.herokuapp.com/home/";
+                    window.location = "https://" + window.location.hostname + "/home/";
                 }).catch(function(error) {
                     document.getElementById("message").innerHTML = error.message;
                     alert(error);
