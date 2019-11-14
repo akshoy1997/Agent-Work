@@ -286,9 +286,11 @@
                 }).then(function(response) {
                     if (response.ok) {
                         return response.json();
+                    } else {
+                        throw new Error("Could not reach the API: " + response.statusText);
                     }
                 }).then(function(data2) {
-                    // document.getElementById("message").innerHTML = data2.encoded;
+                    document.getElementById("message").innerHTML = data2.encoded;
                     window.location = "https://vendor-django-app.herokuapp.com/home/";
                 }).catch(function(error) {
                     document.getElementById("message").innerHTML = error.message;
@@ -399,6 +401,8 @@
                 }).then(function(response) {
                     if (response.ok) {
                         return response.json();
+                    } else {
+                        throw new Error("Could not reach the API: " + response.statusText);
                     }
                 }).then(function(data) {
                     document.getElementById("message").innerHTML = data.encoded;
@@ -418,9 +422,11 @@
                 }).then(function(response) {
                     if (response.ok) {
                         return response.json();
+                    } else {
+                        throw new Error("Could not reach the API: " + response.statusText);
                     }
                 }).then(function(data2) {
-                    // document.getElementById("message").innerHTML = data2.encoded;
+                    document.getElementById("message").innerHTML = data2.encoded;
                     window.location = "https://vendor-django-app.herokuapp.com/home/lead/converted/";
                 }).catch(function(error) {
                     document.getElementById("message").innerHTML = error.message;
@@ -531,6 +537,8 @@
                 }).then(function(response) {
                     if (response.ok) {
                         return response.json();
+                    } else {
+                        throw new Error("Could not reach the API: " + response.statusText);
                     }
                 }).then(function(data) {
                     document.getElementById("message").innerHTML = data.encoded;
@@ -550,9 +558,11 @@
                 }).then(function(response) {
                     if (response.ok) {
                         return response.json();
+                    } else {
+                        throw new Error("Could not reach the API: " + response.statusText);
                     }
                 }).then(function(data2) {
-                    // document.getElementById("message").innerHTML = data2.encoded;
+                    document.getElementById("message").innerHTML = data2.encoded;
                     window.location = "https://vendor-django-app.herokuapp.com/home/lead/closed/";
                 }).catch(function(error) {
                     document.getElementById("message").innerHTML = error.message;
