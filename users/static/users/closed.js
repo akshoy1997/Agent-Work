@@ -6,7 +6,7 @@ container.setAttribute('class', 'container');
 app.appendChild(container);
 
 var request = new XMLHttpRequest();
-request.open('GET', window.location.hostname + '/api/leads/', true);
+request.open('GET', 'https://' + window.location.hostname + '/api/leads/', true);
 request.onload = function () {
 
   // Begin accessing JSON data here
