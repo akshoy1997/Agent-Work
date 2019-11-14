@@ -6,7 +6,7 @@ container.setAttribute('class', 'container');
 app.appendChild(container);
 
 var request = new XMLHttpRequest();
-request.open('GET', 'https://vendor-django-app.herokuapp.com/api/meetings/?lead_id=' + localStorage["lead_id"], true);
+request.open('GET', window.location.hostname + '/api/meetings/?lead_id=' + localStorage["lead_id"], true);
 request.onload = function () {
 
   // Begin accessing JSON data here
