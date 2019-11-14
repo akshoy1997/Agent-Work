@@ -7,4 +7,4 @@ class UserRegisterForm(UserCreationForm):
 
     class Meta:
         model = Agent
-        fields = ['username', 'phone_number', 'email', 'password1', 'password2']
+        fields = ['username', 'phone_number', 'email', 'company', 'password1', 'password2']
