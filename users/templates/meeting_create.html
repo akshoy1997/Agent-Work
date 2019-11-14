@@ -63,9 +63,6 @@
 
             <label for="time">Time</label>
             <input type="time" id="time" name="date">
-
-            <label for="venue">Venue</label>
-            <input type="text" id="venue" name="venue" placeholder="Venue">
             
             <label for="date2">Follow-Up Date</label>
             <input type="date" id="date2" name="date2">
@@ -123,7 +120,6 @@
                 "lead": parseInt(localStorage["lead_id"]),
                 "type" : "FOLLOW-UP MEETING",
                 "status": document.getElementById('status').value,
-                'venue' : document.getElementById('venue').value,
                 "details" : document.getElementById('details').value,
                 "latitude" : localStorage["latitude"],
                 "longitude" : localStorage["longitude"],

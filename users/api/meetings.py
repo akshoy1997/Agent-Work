@@ -11,7 +11,6 @@ class MeetingSerializer(BaseSerializer):
             'type',
             'date',
             'time',
-            'venue',
             'status',
             'details',
             'follow_up_date',

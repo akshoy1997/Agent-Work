@@ -34,12 +34,6 @@ request.onload = function () {
           card.appendChild(p2);
         }
 
-        if(item.venue){
-          const p3 = document.createElement('p');
-          p3.textContent = `Venue: ${item.venue}`;
-          card.appendChild(p3);
-        }
-
         if(item.follow_up_date){
           const p4 = document.createElement('p');
           p4.textContent = `Follow-Up Date: ${item.follow_up_date}`;

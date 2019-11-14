@@ -34,11 +34,6 @@ class Meeting(BaseModel):
         blank=False,
         null=True
     )
-    venue = models.CharField(
-        max_length=100, 
-        unique=False,
-        blank=True
-    )
     status = models.CharField(
         max_length=10,
         unique=False,
