@@ -270,33 +270,34 @@
                     }
                 }).then(function(data) {
                     document.getElementById("message").innerHTML = data.encoded;
+                    fetch(url2, {
+                        method: "POST",
+                        credentials: "same-origin",
+                        headers: {
+                            "X-CSRFToken" : getCookie('csrftoken'),
+                            "Accept": "application/json",
+                            "Content-Type": "application/json; charset=UTF-8"
+                        },
+                        body: JSON.stringify(data2)
+                    }).then(function(response) {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error("Could not reach the API: " + response.statusText);
+                        }
+                    }).then(function(data2) {
+                        document.getElementById("message").innerHTML = data2.encoded;
+                        window.location = "https://vendor-django-app.herokuapp.com/home/";
+                    }).catch(function(error) {
+                        document.getElementById("message").innerHTML = error.message;
+                        alert(error);
+                    });
                 }).catch(function(error) {
                     document.getElementById("message").innerHTML = error.message;
                     alert(error);
                 });
                 console.log(data2);
-                fetch(url2, {
-                    method: "POST",
-                    credentials: "same-origin",
-                    headers: {
-                        "X-CSRFToken" : getCookie('csrftoken'),
-                        "Accept": "application/json",
-                        "Content-Type": "application/json; charset=UTF-8"
-                    },
-                    body: JSON.stringify(data2)
-                }).then(function(response) {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        throw new Error("Could not reach the API: " + response.statusText);
-                    }
-                }).then(function(data2) {
-                    document.getElementById("message").innerHTML = data2.encoded;
-                    window.location = "https://vendor-django-app.herokuapp.com/home/";
-                }).catch(function(error) {
-                    document.getElementById("message").innerHTML = error.message;
-                    alert(error);
-                });
+                
             }
         }
         function check2(event) {
@@ -407,28 +408,28 @@
                     }
                 }).then(function(data3) {
                     document.getElementById("message").innerHTML = data3.encoded;
-                }).catch(function(error) {
-                    document.getElementById("message").innerHTML = error.message;
-                    alert(error);
-                });
-                fetch(url2, {
-                    method: "POST",
-                    credentials: "same-origin",
-                    headers: {
-                        "X-CSRFToken" : getCookie('csrftoken'),
-                        "Accept": "application/json",
-                        "Content-Type": "application/json; charset=UTF-8"
-                    },
-                    body: JSON.stringify(data2)
-                }).then(function(response) {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        throw new Error("Could not reach the API: " + response.statusText);
-                    }
-                }).then(function(data4) {
-                    document.getElementById("message").innerHTML = data4.encoded;
-                    window.location = "https://vendor-django-app.herokuapp.com/home/lead/converted/";
+                    fetch(url2, {
+                        method: "POST",
+                        credentials: "same-origin",
+                        headers: {
+                            "X-CSRFToken" : getCookie('csrftoken'),
+                            "Accept": "application/json",
+                            "Content-Type": "application/json; charset=UTF-8"
+                        },
+                        body: JSON.stringify(data4)
+                    }).then(function(response) {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error("Could not reach the API: " + response.statusText);
+                        }
+                    }).then(function(data4) {
+                        document.getElementById("message").innerHTML = data4.encoded;
+                        window.location = "https://vendor-django-app.herokuapp.com/home/";
+                    }).catch(function(error) {
+                        document.getElementById("message").innerHTML = error.message;
+                        alert(error);
+                    });
                 }).catch(function(error) {
                     document.getElementById("message").innerHTML = error.message;
                     alert(error);
@@ -542,28 +543,28 @@
                     }
                 }).then(function(data5) {
                     document.getElementById("message").innerHTML = data5.encoded;
-                }).catch(function(error) {
-                    document.getElementById("message").innerHTML = error.message;
-                    alert(error);
-                });
-                fetch(url2, {
-                    method: "POST",
-                    credentials: "same-origin",
-                    headers: {
-                        "X-CSRFToken" : getCookie('csrftoken'),
-                        "Accept": "application/json",
-                        "Content-Type": "application/json; charset=UTF-8"
-                    },
-                    body: JSON.stringify(data6)
-                }).then(function(response) {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        throw new Error("Could not reach the API: " + response.statusText);
-                    }
-                }).then(function(data6) {
-                    document.getElementById("message").innerHTML = data6.encoded;
-                    window.location = "https://vendor-django-app.herokuapp.com/home/lead/closed/";
+                    fetch(url2, {
+                        method: "POST",
+                        credentials: "same-origin",
+                        headers: {
+                            "X-CSRFToken" : getCookie('csrftoken'),
+                            "Accept": "application/json",
+                            "Content-Type": "application/json; charset=UTF-8"
+                        },
+                        body: JSON.stringify(data2)
+                    }).then(function(response) {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error("Could not reach the API: " + response.statusText);
+                        }
+                    }).then(function(data2) {
+                        document.getElementById("message").innerHTML = data2.encoded;
+                        window.location = "https://vendor-django-app.herokuapp.com/home/";
+                    }).catch(function(error) {
+                        document.getElementById("message").innerHTML = error.message;
+                        alert(error);
+                    });
                 }).catch(function(error) {
                     document.getElementById("message").innerHTML = error.message;
                     alert(error);
