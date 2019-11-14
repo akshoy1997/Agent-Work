@@ -30,7 +30,7 @@ class LeadViewSet(BaseModelViewSet):
         for the currently authenticated user.
         """
         user = self.request.user
-        return Lead.objects.filter(agent=user)
+        return Lead.objects.filter(agent=user).order_by('-id')
 
     def partial_update(self, request, pk, *args, **kwargs):
         kwargs['partial'] = True
