@@ -10,7 +10,7 @@ function storeID(value){
 }
 
 var request = new XMLHttpRequest();
-request.open('GET', "https://vendor-django-app.herokuapp.com/api/leads/", true);
+request.open('GET', 'http://127.0.0.1:8000/api/leads/', true);
 request.onload = function () {
 
   // Begin accessing JSON data here
@@ -42,10 +42,6 @@ request.onload = function () {
         Btn.setAttribute('onClick', `storeID(${item.id})`);
         Btn.textContent = "Change Status";
 
-        const p4 = document.createElement('p');
-        p4.textContent = `ID: ${item.id}`;
-        p4.setAttribute('style','display:none;')
-
         const a = document.createElement('a');
         a.setAttribute('href', "meetings/");
 
@@ -59,7 +55,19 @@ request.onload = function () {
         card.appendChild(p1);
         card.appendChild(p2);
         card.appendChild(p3);
-        card.appendChild(p4);
+
+        if(item.target){
+          const p4 = document.createElement('p');
+          p4.textContent = `Target for: ${item.target}`;
+          card.appendChild(p4);
+        }
+
+        if(item.details){
+          const p5 = document.createElement('p');
+          p5.textContent = `Lead Details: ${item.details}`;
+          card.appendChild(p5);
+        }
+
         card.appendChild(a);
         a.appendChild(btn);
         card.appendChild(A);
