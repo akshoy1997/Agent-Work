@@ -286,8 +286,6 @@
                 }).then(function(response) {
                     if (response.ok) {
                         return response.json();
-                    } else {
-                        throw new Error("Could not reach the API: " + response.statusText);
                     }
                 }).then(function(data2) {
                     document.getElementById("message").innerHTML = data2.encoded;
@@ -401,8 +399,6 @@
                 }).then(function(response) {
                     if (response.ok) {
                         return response.json();
-                    } else {
-                        throw new Error("Could not reach the API: " + response.statusText);
                     }
                 }).then(function(data) {
                     document.getElementById("message").innerHTML = data.encoded;
@@ -422,8 +418,6 @@
                 }).then(function(response) {
                     if (response.ok) {
                         return response.json();
-                    } else {
-                        throw new Error("Could not reach the API: " + response.statusText);
                     }
                 }).then(function(data2) {
                     document.getElementById("message").innerHTML = data2.encoded;
@@ -537,8 +531,6 @@
                 }).then(function(response) {
                     if (response.ok) {
                         return response.json();
-                    } else {
-                        throw new Error("Could not reach the API: " + response.statusText);
                     }
                 }).then(function(data) {
                     document.getElementById("message").innerHTML = data.encoded;
@@ -558,8 +550,6 @@
                 }).then(function(response) {
                     if (response.ok) {
                         return response.json();
-                    } else {
-                        throw new Error("Could not reach the API: " + response.statusText);
                     }
                 }).then(function(data2) {
                     document.getElementById("message").innerHTML = data2.encoded;
