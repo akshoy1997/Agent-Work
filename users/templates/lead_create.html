@@ -427,7 +427,7 @@
                     }
                 }).then(function(data) {
                     document.getElementById("message").innerHTML = data2.encoded;
-                    window.location = "https://vendor-django-app.herokuapp.com/lead/converted/";
+                    window.location = "https://vendor-django-app.herokuapp.com/home/lead/converted/";
                 }).catch(function(error) {
                     document.getElementById("message").innerHTML = error.message;
                     alert(error);
