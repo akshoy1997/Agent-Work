@@ -425,7 +425,7 @@
                         }
                     }).then(function(data4) {
                         document.getElementById("message").innerHTML = data4.encoded;
-                        window.location = "https://vendor-django-app.herokuapp.com/home/";
+                        window.location = "https://vendor-django-app.herokuapp.com/home/lead/converted/";
                     }).catch(function(error) {
                         document.getElementById("message").innerHTML = error.message;
                         alert(error);
@@ -551,16 +551,16 @@
                             "Accept": "application/json",
                             "Content-Type": "application/json; charset=UTF-8"
                         },
-                        body: JSON.stringify(data2)
+                        body: JSON.stringify(data6)
                     }).then(function(response) {
                         if (response.ok) {
                             return response.json();
                         } else {
                             throw new Error("Could not reach the API: " + response.statusText);
                         }
-                    }).then(function(data2) {
-                        document.getElementById("message").innerHTML = data2.encoded;
-                        window.location = "https://vendor-django-app.herokuapp.com/home/";
+                    }).then(function(data6) {
+                        document.getElementById("message").innerHTML = data6.encoded;
+                        window.location = "https://vendor-django-app.herokuapp.com/home/lead/closed/";
                     }).catch(function(error) {
                         document.getElementById("message").innerHTML = error.message;
                         alert(error);
