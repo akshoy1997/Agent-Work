@@ -289,7 +289,7 @@
                     } else {
                         throw new Error("Could not reach the API: " + response.statusText);
                     }
-                }).then(function(data) {
+                }).then(function(data2) {
                     document.getElementById("message").innerHTML = data2.encoded;
                     window.location = "https://vendor-django-app.herokuapp.com/home/";
                 }).catch(function(error) {
@@ -425,7 +425,7 @@
                     } else {
                         throw new Error("Could not reach the API: " + response.statusText);
                     }
-                }).then(function(data) {
+                }).then(function(data2) {
                     document.getElementById("message").innerHTML = data2.encoded;
                     window.location = "https://vendor-django-app.herokuapp.com/home/lead/converted/";
                 }).catch(function(error) {
@@ -561,7 +561,7 @@
                     } else {
                         throw new Error("Could not reach the API: " + response.statusText);
                     }
-                }).then(function(data) {
+                }).then(function(data2) {
                     document.getElementById("message").innerHTML = data2.encoded;
                     window.location = "https://vendor-django-app.herokuapp.com/home/lead/closed/";
                 }).catch(function(error) {
