@@ -110,8 +110,8 @@
         request.open('GET', 'https://vendor-django-app.herokuapp.com/api/leads/', true);
         request.onload = function () {
             // Begin accessing JSON data here
-            var data = JSON.parse(this.response);
-            localStorage["lead_id"] = data[0].id + 1
+            var datas = JSON.parse(this.response);
+            localStorage["lead_id"] = datas[0].id + 1
         }
         request.send();
         function phonenumber(value){
@@ -304,7 +304,7 @@
             var count = 0;
             var date = new Date()
             var time = date.getHours() + ":" + date.getMinutes();
-            var data = {
+            var data3 = {
                 "agent": parseInt(document.getElementById('message').innerHTML),
                 "name" : document.getElementById('name').value,
                 'phone_number' : document.getElementById('phone_number').value,
@@ -315,7 +315,7 @@
                 "latitude" : localStorage["latitude"],
                 "longitude" : localStorage["longitude"],
                 };
-            var data2 = {
+            var data4 = {
                 "lead" : parseInt(localStorage["lead_id"]),
                 "type" : "INTRODUCTORY MEETING",
                 "status": document.getElementById('status').value,
@@ -326,9 +326,8 @@
                 "latitude" : localStorage["latitude"],
                 "longitude" : localStorage["longitude"],
             }
-            console.log(data2)
             if (document.getElementById('date').value !== ""){
-                data2["follow_up_date"] = document.getElementById('date2').value;
+                data4["follow_up_date"] = document.getElementById('date2').value;
             }
             if(document.getElementById('target').value == ""){
                 document.getElementById('target-alert').style.display = 'block';
@@ -397,15 +396,15 @@
                         "Accept": "application/json",
                         "Content-Type": "application/json; charset=UTF-8"
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(data3)
                 }).then(function(response) {
                     if (response.ok) {
                         return response.json();
                     } else {
                         throw new Error("Could not reach the API: " + response.statusText);
                     }
-                }).then(function(data) {
-                    document.getElementById("message").innerHTML = data.encoded;
+                }).then(function(data3) {
+                    document.getElementById("message").innerHTML = data3.encoded;
                 }).catch(function(error) {
                     document.getElementById("message").innerHTML = error.message;
                     alert(error);
@@ -425,8 +424,8 @@
                     } else {
                         throw new Error("Could not reach the API: " + response.statusText);
                     }
-                }).then(function(data2) {
-                    document.getElementById("message").innerHTML = data2.encoded;
+                }).then(function(data4) {
+                    document.getElementById("message").innerHTML = data4.encoded;
                     window.location = "https://vendor-django-app.herokuapp.com/home/lead/converted/";
                 }).catch(function(error) {
                     document.getElementById("message").innerHTML = error.message;
@@ -440,7 +439,7 @@
             var count = 0;
             var date = new Date()
             var time = date.getHours() + ":" + date.getMinutes();
-            var data = {
+            var data5 = {
                 "agent": parseInt(document.getElementById('message').innerHTML),
                 "name" : document.getElementById('name').value,
                 'phone_number' : document.getElementById('phone_number').value,
@@ -451,7 +450,7 @@
                 "latitude" : localStorage["latitude"],
                 "longitude" : localStorage["longitude"],
                 };
-            var data2 = {
+            var data6 = {
                 "lead" : parseInt(localStorage["lead_id"]),
                 "type" : "INTRODUCTORY MEETING",
                 "status": document.getElementById('status').value,
@@ -462,9 +461,8 @@
                 "latitude" : localStorage["latitude"],
                 "longitude" : localStorage["longitude"],
             }
-            console.log(data2)
             if (document.getElementById('date').value !== ""){
-                data2["follow_up_date"] = document.getElementById('date2').value;
+                data6["follow_up_date"] = document.getElementById('date2').value;
             }
             if(document.getElementById('target').value == ""){
                 document.getElementById('target-alert').style.display = 'block';
@@ -533,15 +531,15 @@
                         "Accept": "application/json",
                         "Content-Type": "application/json; charset=UTF-8"
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(data5)
                 }).then(function(response) {
                     if (response.ok) {
                         return response.json();
                     } else {
                         throw new Error("Could not reach the API: " + response.statusText);
                     }
-                }).then(function(data) {
-                    document.getElementById("message").innerHTML = data.encoded;
+                }).then(function(data5) {
+                    document.getElementById("message").innerHTML = data5.encoded;
                 }).catch(function(error) {
                     document.getElementById("message").innerHTML = error.message;
                     alert(error);
@@ -554,15 +552,15 @@
                         "Accept": "application/json",
                         "Content-Type": "application/json; charset=UTF-8"
                     },
-                    body: JSON.stringify(data2)
+                    body: JSON.stringify(data6)
                 }).then(function(response) {
                     if (response.ok) {
                         return response.json();
                     } else {
                         throw new Error("Could not reach the API: " + response.statusText);
                     }
-                }).then(function(data2) {
-                    document.getElementById("message").innerHTML = data2.encoded;
+                }).then(function(data6) {
+                    document.getElementById("message").innerHTML = data6.encoded;
                     window.location = "https://vendor-django-app.herokuapp.com/home/lead/closed/";
                 }).catch(function(error) {
                     document.getElementById("message").innerHTML = error.message;
